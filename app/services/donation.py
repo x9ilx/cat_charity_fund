@@ -17,7 +17,7 @@ async def donate_to_project(
     while not new_obj.fully_invested:
         apply_object = await session.execute(
             select(apply_object_type)
-            .where(apply_object_type.fully_invested == False)
+            .where(apply_object_type.fully_invested is False)
             .order_by(apply_object_type.create_date)
         )
         apply_object = apply_object.scalars().first()
