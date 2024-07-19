@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.db import Base
 from app.models.user import User
+from app.services.donation import donate_to_project
 
 ModelType = TypeVar('ModelType', bound=Base)
 CreateSchemaType = TypeVar('CreateSchemaType', bound=BaseModel)
@@ -69,7 +70,24 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         await session.refresh(db_obj)
         return db_obj
 
-    async def delete(self, db_obj: ModelType, session: AsyncSession):
+    async def delete(
+        self,
+        db_obj: ModelType,
+        session: AsyncSession
+    ) -> ModelType:
         await session.delete(db_obj)
         await session.commit()
+        return db_obj
+
+    async def apply_donation(
+        self,
+        db_obj: ModelType,
+        session: AsyncSession
+    ) -> ModelType:
+        db_obj = await donate_to_project(
+            new_obj=db_obj,
+            session=session,
+        )
+        await session.commit()
+        await session.refresh(db_obj)
         return db_obj

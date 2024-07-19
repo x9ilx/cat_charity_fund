@@ -8,7 +8,7 @@ from app.models.donation import Donation
 from app.models.user import User
 from app.schemas.donation import (DonationCreate, DonationDB,
                                   DonationDBForSuperuser)
-from app.services.donation import donate_to_project
+
 
 router = APIRouter()
 
@@ -22,9 +22,10 @@ async def create_new_donation(
     session: AsyncSession = Depends(get_async_session),
     user: User = Depends(current_user),
 ) -> Donation:
-    db_donation = await donation_crud.create(donation, user, session)
-    db_donation = await donate_to_project(new_obj=db_donation, session=session)
-    return db_donation
+    return await donation_crud.apply_donation(
+        db_obj=await donation_crud.create(donation, user, session),
+        session=session,
+    )
 
 
 @router.get(

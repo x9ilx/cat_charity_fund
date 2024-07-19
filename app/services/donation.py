@@ -43,6 +43,4 @@ async def donate_to_project(
             donation = close_donation_or_project(donation)
         if charity_project.full_amount == charity_project.invested_amount:
             charity_project = close_donation_or_project(charity_project)
-    await session.commit()
-    await session.refresh(new_obj)
     return new_obj

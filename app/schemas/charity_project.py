@@ -5,8 +5,16 @@ from pydantic import BaseModel, Extra, Field, PositiveInt, validator
 from app.schemas.mixins import DonationMixinSchema
 
 
+NAME_MIN_LENGHT = 1
+NAME_MAX_LENGTH = 100
+
+
 class CharityProjectBase(BaseModel):
-    name: str = Field(..., min_length=1, max_length=100)
+    name: str = Field(
+        ...,
+        min_length=NAME_MIN_LENGHT,
+        max_length=NAME_MAX_LENGTH,
+    )
     description: str
     full_amount: PositiveInt
 
@@ -22,7 +30,11 @@ class CharityProjectCreate(CharityProjectBase):
 
 
 class CharityProjectUpdate(CharityProjectBase):
-    name: Optional[str] = Field(None, min_length=1, max_length=100)
+    name: Optional[str] = Field(
+        None,
+        min_length=NAME_MIN_LENGHT,
+        max_length=NAME_MAX_LENGTH,
+    )
     description: Optional[str]
     full_amount: Optional[PositiveInt]
 
