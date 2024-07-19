@@ -17,7 +17,7 @@ async def donate_to_project(
     while not new_obj.fully_invested:
         apply_object = await session.execute(
             select(apply_object_type)
-            .where(apply_object_type.fully_invested is False)
+            .where(apply_object_type.fully_invested == False)
             .order_by(apply_object_type.create_date)
         )
         apply_object = apply_object.scalars().first()
@@ -31,15 +31,16 @@ async def donate_to_project(
             charity_project.full_amount - charity_project.invested_amount
         )
         remaining_balance = donation.full_amount - donation.invested_amount
-        if remaining_balance < left_to_pay:
-            left_to_pay -= remaining_balance
-            charity_project.invested_amount += remaining_balance
+        add_sum = (
+            remaining_balance
+            if remaining_balance <= left_to_pay
+            else left_to_pay
+        )
+        donation.invested_amount += add_sum
+        charity_project.invested_amount += add_sum
+        if donation.full_amount == donation.invested_amount:
             donation = close_donation_or_project(donation)
-        elif remaining_balance > left_to_pay:
-            donation.invested_amount += left_to_pay
-            charity_project = close_donation_or_project(charity_project)
-        else:
-            donation = close_donation_or_project(donation)
+        if charity_project.full_amount == charity_project.invested_amount:
             charity_project = close_donation_or_project(charity_project)
     await session.commit()
     await session.refresh(new_obj)

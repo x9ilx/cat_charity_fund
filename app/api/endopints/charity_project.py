@@ -4,19 +4,15 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.api.validators import (
     check_charity_project_exist,
     check_charity_project_full_amount_greater_invested_amount,
-    check_charity_project_havent_deposit,
-    check_charity_project_name_duplicate,
-    check_charity_project_not_fully_invested,
-)
+    check_charity_project_havent_deposit, check_charity_project_name_duplicate,
+    check_charity_project_not_fully_invested)
 from app.core.db import get_async_session
 from app.core.user import current_superuser
 from app.crud.charity_project import charity_project_crud
 from app.models.charity_project import CharityProject
-from app.schemas.charity_project import (
-    CharityProjectCreate,
-    CharityProjectDB,
-    CharityProjectUpdate,
-)
+from app.schemas.charity_project import (CharityProjectCreate,
+                                         CharityProjectDB,
+                                         CharityProjectUpdate)
 from app.services.base import close_donation_or_project
 from app.services.donation import donate_to_project
 
