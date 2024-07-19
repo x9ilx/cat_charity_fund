@@ -1,3 +1,5 @@
+from typing import Union
+
 from fastapi import Depends
 from fastapi_users import (BaseUserManager, FastAPIUsers, IntegerIDMixin,
                            InvalidPasswordException)
@@ -35,7 +37,7 @@ current_superuser = fastapi_user.current_user(active=True, superuser=True)
 
 class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
     async def validate_password(
-        self, password: str, user: UserCreate | User
+        self, password: str, user: Union[UserCreate, User]
     ) -> None:
         if len(password) < 3:
             raise InvalidPasswordException(
