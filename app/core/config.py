@@ -14,7 +14,7 @@ class Settings(BaseSettings):
         'популяции.'
     )
     database_url: str = 'sqlite+aiosqlite:///./fastapi.db'
-    secret: str
+    secret: str = 'CaMbluCeKPeTHbluKJlI04BMuPe'
     first_superuser_email: Optional[EmailStr] = None
     first_superuser_password: Optional[str] = None
 
