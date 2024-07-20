@@ -64,10 +64,9 @@ async def partially_update_meeting_room(
         )
         if charity_project.invested_amount == obj_in.full_amount:
             charity_project = close_donation_or_project(charity_project)
-    charity_project = await charity_project_crud.update(
+    return await charity_project_crud.update(
         charity_project, obj_in, session
     )
-    return charity_project
 
 
 @router.delete(
